@@ -1,58 +1,55 @@
+const { count } = require("console")
 const BookModel= require("../models/bookModel")
+const AuthorModel=require("../models/authorsModel")
+const authorsModel = require("../models/authorsModel")
+const bookModel = require("../models/bookModel")
+const { all } = require("../routes/route")
 
-const createBook= async function (req, res) 
-{
+//1
+const createBook= async function (req, res) {
     let data= req.body
 
     let savedData= await BookModel.create(data)
     res.send({msg: savedData})
-};
+}
 
-const getBooksData= async function (req, res) 
-{
-  let allBooks= await BookModel.find( )
-  res.send({msg: allBooks})
-};
+const createAuthor= async function (req, res) {
+    let data= req.body
 
-const bookList = async function (req, res) 
-{
-    let allBookNameAuthor = await BookModel.find().select({bookName: 1,authorName: 1, _id: 0,});
-    res.send({ msg: allBookNameAuthor });
-};
+    let savedData= await AuthorModel.create(data)
+    res.send({msg: savedData})
+}
 
-const getBooksInYear = async function (req, res)
-{
-  let yearr = req.query.year;
-  console.log(yearr);
-  let allbooks = await BookModel.find({ year: yearr });
-  res.send({ msg: allbooks });
-};
+const getBooksData=async function(req,res){
+    let author = await authorsModel.find({author_name:"Chetan Bhagat"})
+    let bookId = await bookModel.find({author_id:{$eq: author[0].author_id}})
+    res.send({msg: bookId})
+}
 
-const getParticularBooks = async function (req, res)
-{
-    let allBook= req.body
-    console.log(allBook)
-    let randomBooks= await BookModel.find(allBook)
-    res.send({ msg: allBook });
-};
+const findAuthor=async function(req,res){
+    let  bookPrice = await bookModel.findOneAndUpdate(
+        {name:"Two states"},
+        {price : 100},
+        {new : true}
 
-const getXINRBooks = async function (req, res)
-{
-    let indPrice = await BookModel.find({ "prices.indianprice": { $in: ["Rs400", "Rs500", "Rs600"] },});
-    res.send({ msg: indPrice });
-};
+    )
+    let updatePrice = bookPrice.price
+    let authorUpdate = await authorsModel.find({author_id: {$eq: bookPrice.author_id}}).select({author_name:1,_id:0})
+    res.send({msg: authorUpdate , updatePrice})
 
-const getRandomBooks = async function (req, res)
-{
-    let GT500 = await BookModel.find({
-    $or: [{ stockAvailable: true }, { totalPages: { $gt: 500 } }],});
-    res.send({ msg: GT500 });
-};
 
-module.exports.createBook = createBook
-module.exports.getBooksData = getBooksData
-module.exports.bookList = bookList
-module.exports.getBooksInYear = getBooksInYear
-module.exports.getParticularBooks = getParticularBooks
-module.exports.getXINRBooks = getXINRBooks
-module.exports.getRandomBooks = getRandomBooks
+}
+
+
+const findBook=async function(req,res){
+    let allBooks = await bookModel.find({price:{$gte:50,$lte:100}})
+    let aut =allBooks.map(x => x.author_id)
+    let updateBooks = await authorsModel.find({author_id :aut}).select({ author_name:1,_id:0})
+    res.send({msg: updateBooks})
+}
+
+ module.exports.createBook= createBook
+ module.exports.createAuthor= createAuthor
+ module.exports.getBooksData= getBooksData
+ module.exports.findAuthor= findAuthor
+ module.exports.findBook= findBook
