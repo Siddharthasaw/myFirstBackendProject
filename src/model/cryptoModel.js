@@ -1,11 +1,27 @@
 const mongoose = require('mongoose');
 
 const cryptoSchema = new mongoose.Schema({
-    symbol: { type: String } ,  // String and Unique
-    name: { type: String },     // String and Unique
-    marketCapUsd: String,                     // String  ( not Number)
-    priceUsd: String                        //String
+    symbol:
+     { 
+        type: String
+     },
+
+    name: 
+    {
+      type: String
+    },
+
+    marketCapUsd:
+     {
+        type:String
+     },
+
+    priceUsd:
+    {
+      type:String
+    },
+
 },{timestamp:true})
 
 
-module.exports = mongoose.model('crypto', cryptoSchema)
+module.exports = mongoose.model('crypto',cryptoSchema)
