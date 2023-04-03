@@ -696,6 +696,8 @@ section.subscribe .input-wrap button{
 section.subscribe .input-wrap button:hover{
     background:var(--secondary);
 }
+
+
 section.contact-us{
     padding-top:0;
     padding-bottom: 0;
@@ -729,6 +731,8 @@ section.contact-us .contact-info > div > div > div span:first-child{
     font-family: "Raleway-bold";
     margin-bottom:0.25rem;
 }
+
+
 footer{
     background:var(--footer);
     padding:4rem 0;
